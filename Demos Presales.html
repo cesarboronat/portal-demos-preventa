@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Vertical Business Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #e50914;
+            --bg-color: #0d0d0d;
+            --card-bg: #ffffff;
+            --text-dark: #121212;
+            --text-light: #ffffff;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --navbar-bg: rgba(15, 15, 15, 0.95);
+        }
+
+        /* TEMA PIZZERÍA ALFREDO */
+        [data-theme="pizzeria"] {
+            --primary-color: #d9381e;
+            --bg-color: #0a0a0a;
+            --card-bg: #ffffff;
+            --text-dark: #121212;
+            --navbar-bg: rgba(10, 10, 10, 0.95);
+            --header-bg: linear-gradient(135deg, #181818 0%, #000000 100%);
+        }
+
+        /* TEMA NET2PHONE (www.net2phone.com Oficial) */
+        [data-theme="net2phone"] {
+            --primary-color: #002540;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #002540;
+            --navbar-bg: rgba(255, 255, 255, 0.98);
+            --header-bg: #ffffff;
+        }
+
+        /* TEMA CONSULTORIO VITAL */
+        [data-theme="vital"] {
+            --primary-color: #00a884;
+            --bg-color: #072227;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --navbar-bg: rgba(7, 34, 39, 0.95);
+            --header-bg: linear-gradient(135deg, #05191d 0%, #0f383e 100%);
+        }
+
+        /* TEMA HOTEL GRAND HORIZON */
+        [data-theme="hotel"] {
+            --primary-color: #c5a059;
+            --bg-color: #141414;
+            --card-bg: #fcfbf7;
+            --text-dark: #1c1917;
+            --navbar-bg: rgba(20, 20, 20, 0.95);
+            --header-bg: linear-gradient(135deg, #1f1a14 0%, #0d0b08 100%);
+            --font-main: 'Playfair Display', serif;
+        }
+
+        /* TEMA ISP CONNECTFIBER */
+        [data-theme="isp"] {
+            --primary-color: #6366f1;
+            --bg-color: #0f172a;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --navbar-bg: rgba(15, 23, 42, 0.95);
+            --header-bg: linear-gradient(135deg, #020617 0%, #1e1b4b 100%);
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: #1e293b;
+            transition: all 0.4s ease;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .navbar-custom {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background 0.4s ease;
+        }
+
+        .vertical-pill {
+            cursor: pointer;
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0,0,0,0.15);
+            color: #475569;
+            transition: all 0.3s ease;
+            background: rgba(0,0,0,0.03);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 2px;
+        }
+
+        [data-theme="pizzeria"] .vertical-pill,
+        [data-theme="vital"] .vertical-pill,
+        [data-theme="hotel"] .vertical-pill,
+        [data-theme="isp"] .vertical-pill {
+            color: #d1d5db;
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .vertical-pill:hover, .vertical-pill.active {
+            background-color: var(--primary-color);
+            color: #ffffff !important;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .lang-select {
+            background: rgba(0,0,0,0.05);
+            color: var(--text-dark);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        [data-theme="pizzeria"] .lang-select,
+        [data-theme="vital"] .lang-select,
+        [data-theme="hotel"] .lang-select,
+        [data-theme="isp"] .lang-select {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .vertical-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+        .vertical-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-banner {
+            background: var(--header-bg);
+            border-radius: 24px;
+            padding: 40px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .content-card {
+            background-color: var(--card-bg);
+            color: var(--text-dark);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .content-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .btn-n2p-dark {
+            background-color: #002540;
+            color: #ffffff !important;
+            font-weight: 700;
+            border-radius: 30px;
+            padding: 12px 28px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-n2p-dark:hover {
+            background-color: #00192d;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,37,64,0.25);
+        }
+
+        .n2p-tagline {
+            color: #0066ff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .n2p-hero-title {
+            color: #002540;
+            font-weight: 800;
+            font-size: 2.8rem;
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
+
+        .floating-ui-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 12px 30px rgba(0,37,64,0.08);
+            border: 1px solid rgba(0, 37, 64, 0.06);
+        }
+
+        .gradient-logo-text {
+            background: linear-gradient(90deg, #00f0ff 0%, #e6007e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .speedtest-box {
+            background: #00192d;
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            color: #38bdf8;
+            text-align: center;
+        }
+
+        .speed-gauge {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+    </style>
+</head>
+<body data-theme="pizzeria">
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#" id="brandLogo">
+                <i class="fa-solid fa-pizza-slice text-warning fs-3"></i>
+                <span class="fw-bold fs-4 text-white" id="navTitle">Pizzería Alfredo</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarContent">
+                <!-- Selector de Verticales -->
+                <div class="mx-auto d-flex flex-wrap justify-content-center">
+                    <div class="vertical-pill active" onclick="switchVertical('pizzeria')">
+                        <i class="fa-solid fa-utensils"></i> <span data-i18n="pizzeria_tab">Pizzería Alfredo</span>
+                    </div>
+                    <div class="vertical-pill" onclick="switchVertical('net2phone')">
+                        <i class="fa-solid fa-headset"></i> <span>net2phone</span>
+                    </div>
+                    <div class="vertical-pill" onclick="switchVertical('vital')">
+                        <i class="fa-solid fa-user-doctor"></i> <span data-i18n="vital_tab">Consultorio Vital</span>
+                    </div>
+                    <div class="vertical-pill" onclick="switchVertical('hotel')">
+                        <i class="fa-solid fa-hotel"></i> <span data-i18n="hotel_tab">Grand Horizon Hotel</span>
+                    </div>
+                    <div class="vertical-pill" onclick="switchVertical('isp')">
+                        <i class="fa-solid fa-wifi"></i> <span data-i18n="isp_tab">ConnectFiber ISP</span>
+                    </div>
+                </div>
+
+                <!-- Selector de Idioma -->
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <i class="fa-solid fa-globe"></i>
+                    <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                        <option value="es">Español (ES)</option>
+                        <option value="en">English (EN)</option>
+                        <option value="pt">Português (PT)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+
+        <!-- ==========================================
+             1. VERTICAL: PIZZERÍA ALFREDO
+        =========================================== -->
+        <section id="pizzeria" class="vertical-section active">
+            <div class="hero-banner text-center text-md-start d-md-flex align-items-center justify-content-between text-white">
+                <div>
+                    <span class="badge bg-danger mb-2" data-i18n="pizz_badge">Ventas & Pedidos</span>
+                    <h1 class="display-5 fw-bold text-white mb-2">Pizzería Alfredo</h1>
+                    <p class="text-light opacity-75 lead" data-i18n="pizz_sub">Las mejores especialidades artesanales de Latinoamérica.</p>
+                </div>
+                <div class="mt-3 mt-md-0 d-flex gap-2">
+                    <button class="btn btn-outline-light rounded-pill px-3" onclick="filterPizzas('all')" data-i18n="pizz_all">Todas</button>
+                    <button class="btn btn-outline-light rounded-pill px-3" onclick="filterPizzas('clasica')" data-i18n="pizz_clasicas">Clásicas</button>
+                    <button class="btn btn-outline-light rounded-pill px-3" onclick="filterPizzas('fusion')" data-i18n="pizz_fusion">Fusión</button>
+                </div>
+            </div>
+
+            <!-- Reglas de cocina -->
+            <div class="content-card mb-4 border-start border-4 border-danger">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold text-dark mb-1"><i class="fa-solid fa-circle-info me-2 text-danger"></i><span data-i18n="pizz_rules_title">Reglas de Cocina & Pedidos</span></h5>
+                        <p class="small text-muted mb-0" data-i18n="pizz_rules_text">
+                            Vendemos tamaños <strong>Chica</strong> y <strong>Grande</strong>. Puedes combinar hasta 2 sabores en una sola pizza (mitad y mitad). Se pueden quitar toppings, pero los ingredientes base no se modifican.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                        <span class="badge bg-dark px-3 py-2" data-i18n="pizz_hours">Horario: 18:00 - 00:00 hs</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4" id="pizzaGrid"></div>
+        </section>
+
+
+        <!-- ==========================================
+             2. VERTICAL: NET2PHONE (www.net2phone.com)
+        =========================================== -->
+        <section id="net2phone" class="vertical-section">
+            <div class="d-flex flex-wrap align-items-center justify-content-between bg-white p-3 rounded-4 shadow-sm mb-4 border">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="fw-extrabold fs-3 text-dark">net2phone</span>
+                    <span class="border-end pe-3 text-muted small d-none d-md-inline">Productos</span>
+                    <span class="border-end pe-3 text-muted small d-none d-md-inline">Soluciones</span>
+                    <span class="border-end pe-3 text-muted small d-none d-md-inline">Planes</span>
+                    <span class="text-muted small d-none d-md-inline">Partners</span>
+                </div>
+                <div>
+                    <button class="btn btn-n2p-dark btn-sm py-2 px-4" data-i18n="n2p_btn_cta">Hablar con un Especialista</button>
+                </div>
+            </div>
+
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <span class="n2p-tagline mb-3 d-block" data-i18n="n2p_tagline">COMUNICACIONES EN LA NUBE CON IA:</span>
+                    <h1 class="n2p-hero-title mb-4" data-i18n="n2p_title">
+                        Conectá a tu equipo, automatizá lo rutinario y elevá tus interacciones.
+                    </h1>
+                    <p class="text-secondary lead fs-6 mb-4" data-i18n="n2p_sub">
+                        Descubrí soluciones de comunicaciones empoderadas con IA confiables, intuitivas y flexibles para optimizar los flujos de trabajo, colaborar sin esfuerzo, ganar productividad y construir relaciones duraderas con los clientes.
+                    </p>
+                    <button class="btn btn-n2p-dark" data-i18n="n2p_btn_cta">Hablar con un Especialista</button>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="position-relative p-3">
+                        <div style="position: absolute; top: 10%; right: 10%; width: 280px; height: 280px; background: rgba(230,0,126,0.12); filter: blur(60px); border-radius: 50%;"></div>
+
+                        <div class="row g-3 position-relative">
+                            <div class="col-6">
+                                <div class="floating-ui-card">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="p-2 rounded-circle bg-light text-primary"><i class="fa-solid fa-chart-line"></i></div>
+                                        <div>
+                                            <div class="text-uppercase text-muted" style="font-size:0.65rem; font-weight:700;">ENGAGEMENT</div>
+                                            <div class="fw-bold text-dark small">Response in 2 min</div>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-success-subtle text-success fw-bold" style="font-size: 0.7rem;">↑ +34% satisfaction</span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="floating-ui-card">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:28px; height:28px; font-size:0.75rem; font-weight:700;">M</div>
+                                        <div>
+                                            <div class="fw-bold text-dark small">Maria</div>
+                                            <div class="text-muted" style="font-size:0.65rem;">Customer - (305) 555-0182</div>
+                                        </div>
+                                    </div>
+                                    <div class="p-2 bg-light rounded-3 text-dark mb-1" style="font-size:0.7rem;">
+                                        Hey Maria, your car is ready for pickup.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="floating-ui-card border-start border-4 border-info">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="text-uppercase text-muted fw-bold" style="font-size:0.65rem;">OUTBOUND SMS</span>
+                                        <span class="badge bg-primary rounded-pill" style="font-size:0.65rem;">AI Agent</span>
+                                    </div>
+                                    <div class="fw-bold text-dark small">Sent via AI Assistant</div>
+                                    <div class="text-muted" style="font-size:0.7rem;">Service pickup - Auto-triggered</div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="floating-ui-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="fa-solid fa-volume-high text-primary"></i>
+                                            <span class="fw-bold small text-dark">Sarah R. - Pricing Objection</span>
+                                        </div>
+                                        <span class="badge bg-dark text-white fw-bold" style="font-size:0.65rem;">★ TOP CALL</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-1 my-2" style="height: 24px;">
+                                        <div class="bg-primary rounded-pill" style="width:4px; height:40%;"></div>
+                                        <div class="bg-primary rounded-pill" style="width:4px; height:80%;"></div>
+                                        <div class="bg-primary rounded-pill" style="width:4px; height:100%;"></div>
+                                        <div class="bg-primary rounded-pill" style="width:4px; height:50%;"></div>
+                                        <div class="bg-primary rounded-pill" style="width:4px; height:90%;"></div>
+                                        <div class="bg-primary rounded-pill" style="width:4px; height:30%;"></div>
+                                        <div class="bg-primary rounded-pill" style="width:4px; height:70%;"></div>
+                                        <div class="bg-secondary opacity-50 rounded-pill" style="width:4px; height:40%;"></div>
+                                        <div class="bg-secondary opacity-50 rounded-pill" style="width:4px; height:60%;"></div>
+                                    </div>
+                                    <div class="text-muted" style="font-size:0.75rem;">
+                                        <em>Key moment: "Let me show you what saves you over 12 months..."</em>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <div class="content-card">
+                        <div class="gradient-logo-text fs-4 mb-2">ai agent</div>
+                        <h5 class="fw-bold text-dark">Agentes de IA Conversacionales</h5>
+                        <p class="text-muted small">Atención 24/7 en llamadas y chat con respuesta en lenguaje natural y resolución automatizada.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="content-card">
+                        <div class="gradient-logo-text fs-4 mb-2">coach</div>
+                        <h5 class="fw-bold text-dark">Análisis e Inteligencia de Voz</h5>
+                        <p class="text-muted small">Transcripción automática, detección de sentimientos y entrenamiento en tiempo real para llamadas.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="content-card">
+                        <div class="text-primary fs-3 fw-bold mb-2"><i class="fa-solid fa-headset"></i> uContact</div>
+                        <h5 class="fw-bold text-dark">Contact Center Omnicanal</h5>
+                        <p class="text-muted small">Integrá WhatsApp, llamadas, correo y redes sociales en un solo panel para tus agentes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             3. VERTICAL: CONSULTORIO VITAL
+        =========================================== -->
+        <section id="vital" class="vertical-section">
+            <div class="hero-banner text-white">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <span class="badge bg-success mb-2" data-i18n="vital_badge">Salud & Bienestar</span>
+                        <h1 class="display-5 fw-bold text-white mb-2" data-i18n="vital_title">Centro Médico Vital</h1>
+                        <p class="text-light opacity-75 lead" data-i18n="vital_sub">Reserva tu turno médico online en segundos con nuestros especialistas.</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <div class="bg-white text-dark p-3 rounded-3 text-start shadow-sm">
+                            <small class="text-muted d-block fw-bold" data-i18n="vital_urgency">¿Urgencias 24/7?</small>
+                            <span class="fw-bold text-success fs-5"><i class="fa-solid fa-phone me-1"></i> 0800-555-VITAL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-5">
+                    <div class="content-card">
+                        <h4 class="fw-bold mb-3 text-dark"><i class="fa-regular fa-calendar-check me-2 text-success"></i><span data-i18n="vital_book_title">Agendar Turno</span></h4>
+                        <form onsubmit="event.preventDefault(); alert('Buscando turnos disponibles...');">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Especialidad</label>
+                                <select class="form-select">
+                                    <option>Medicina General</option>
+                                    <option>Cardiología</option>
+                                    <option>Pediatría</option>
+                                    <option>Dermatología</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Fecha Deseada</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-success w-100 fw-bold">Consultar Disponibilidad</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="content-card">
+                                <i class="fa-solid fa-heart-pulse text-danger fs-3 mb-2"></i>
+                                <h5 class="fw-bold">Chequeos Preventivos</h5>
+                                <p class="text-muted small">Planes integrales de salud adaptados a tu edad.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="content-card">
+                                <i class="fa-solid fa-laptop-medical text-info fs-3 mb-2"></i>
+                                <h5 class="fw-bold">Telemedicina 24h</h5>
+                                <p class="text-muted small">Atención médica por videollamada desde tu hogar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             4. VERTICAL: GRAND HORIZON HOTEL
+        =========================================== -->
+        <section id="hotel" class="vertical-section">
+            <div class="hero-banner text-center text-white">
+                <span class="badge bg-warning text-dark mb-2">Luxury Resort & Spa</span>
+                <h1 class="display-4 fw-bold text-white mb-2">Grand Horizon Hotel</h1>
+                <p class="text-light opacity-75 lead mb-4">Una experiencia inolvidable de confort, lujo y relax frente al mar.</p>
+            </div>
+
+            <div class="content-card mb-4">
+                <form class="row g-3 align-items-end" onsubmit="event.preventDefault(); alert('Buscando habitaciones...');">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">Check-in</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">Check-out</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">Huéspedes</label>
+                        <select class="form-select">
+                            <option>2 Adultos</option>
+                            <option>Suite Familiar</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-warning w-100 fw-bold">Buscar Habitación</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+
+        <!-- ==========================================
+             5. VERTICAL: CONNECTFIBER ISP
+        =========================================== -->
+        <section id="isp" class="vertical-section">
+            <div class="hero-banner text-white">
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <span class="badge bg-primary mb-2">Soporte Técnico</span>
+                        <h1 class="display-5 fw-bold text-white mb-2">ConnectFiber ISP</h1>
+                        <p class="text-light opacity-75 lead">Internet por Fibra Óptica ultrarrápida. Centro de Ayuda de Red.</p>
+                    </div>
+                    <div class="col-md-5 mt-3 mt-md-0">
+                        <div class="speedtest-box">
+                            <small class="text-uppercase fw-bold text-muted d-block">Test de Velocidad de Red</small>
+                            <div class="speed-gauge my-2" id="speedDisplay">850 <span class="fs-6 text-muted">Mbps</span></div>
+                            <button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick="runSpeedTest()">Probar Conexión</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const pizzasData = [
+            { id: 1, name: "Pizza Napolitana", country: "🇦🇷 Argentina", category: "clasica", desc: "Masa, salsa de tomate, mozzarella, rodajas de tomate fresco, ajo picado y orégano.", priceC: "$8.500", priceG: "$12.000" },
+            { id: 2, name: "Pizza Fugazzeta", country: "🇦🇷 Argentina", category: "clasica", desc: "Masa, abundante queso mozzarella, cebolla en pluma y orégano (opcional jamón).", priceC: "$9.000", priceG: "$13.000" },
+            { id: 3, name: "Pizza Choclo", country: "🇺🇾 Uruguay / 🇦🇷 AR", category: "clasica", desc: "Salsa de tomate, mozzarella, granos de maíz dulce, jamón o panceta y crema.", priceC: "$8.800", priceG: "$12.500" },
+            { id: 4, name: "Pollo con Champiñones", country: "🇨🇱 Chile", category: "clasica", desc: "Salsa de tomate, mozzarella, pollo desmenuzado, champiñones salteados y cebolla morada.", priceC: "$9.500", priceG: "$13.800" },
+            { id: 5, name: "Pizza Tropical", country: "🌎 Latinoamérica", category: "clasica", desc: "Salsa de tomate, mozzarella, jamón, piña en cubos jugosa y pimientos verdes.", priceC: "$8.900", priceG: "$12.800" },
+            { id: 6, name: "Pizza de Mariscos", country: "🇵🇪 Perú / 🇨🇱 Chile", category: "especial", desc: "Salsa de tomate, mozzarella, camarones, calamares, mejillones y perejil fresco.", priceC: "$11.000", priceG: "$15.500" },
+            { id: 7, name: "Pizza Ranchera", country: "🇲🇽 México", category: "fusion", desc: "Base de frijoles refritos, mozzarella, chorizo, jalapeños, cebolla y salsa ranchera.", priceC: "$9.800", priceG: "$14.000" },
+            { id: 8, name: "Pizza Al Pastor", country: "🇲🇽 México", category: "fusion", desc: "Salsa de tomate, mozzarella, carne al pastor marinada, piña, cebolla y cilantro.", priceC: "$10.200", priceG: "$14.500" },
+            { id: 9, name: "Bandeja Paisa Fusion", country: "🇨🇴 Colombia", category: "fusion", desc: "Mozzarella, chicharrón troceado, frijoles, plátano maduro frito y rodajas de aguacate.", priceC: "$10.500", priceG: "$15.000" },
+            { id: 10, name: "Pizza Choripán", country: "🇦🇷 AR / 🇺🇾 UY", category: "fusion", desc: "Salsa de tomate, mozzarella, chorizo criollo en rodajas, chimichurri y morrones asados.", priceC: "$9.600", priceG: "$13.900" },
+            { id: 11, name: "Pizza Feijoada", country: "🇧🇷 Brasil", category: "fusion", desc: "Puré ligero de frijoles negros, mozzarella, carne seca, linguiça y farofa espolvoreada.", priceC: "$10.800", priceG: "$15.200" },
+            { id: 12, name: "Pizza Amazonía", country: "🇵🇪 PE / 🇪🇨 EC", category: "especial", desc: "Salsa de tomate, mozzarella, palmito, cecina de cerdo, plátano verde frito y cilantro.", priceC: "$10.500", priceG: "$14.800" }
+        ];
+
+        const i18n = {
+            es: {
+                pizzeria_tab: "Pizzería Alfredo",
+                vital_tab: "Consultorio Vital",
+                hotel_tab: "Grand Horizon Hotel",
+                isp_tab: "ConnectFiber ISP",
+                pizz_badge: "Ventas & Pedidos",
+                pizz_sub: "Las mejores especialidades artesanales de Latinoamérica.",
+                pizz_all: "Todas",
+                pizz_clasicas: "Clásicas",
+                pizz_fusion: "Fusión",
+                pizz_rules_title: "Reglas de Cocina & Pedidos",
+                pizz_rules_text: "Vendemos tamaños Chica y Grande. Puedes combinar hasta 2 sabores en una sola pizza (mitad y mitad). Se pueden quitar toppings, pero los ingredientes base no se modifican.",
+                pizz_hours: "Horario: 18:00 - 00:00 hs",
+                n2p_tagline: "COMUNICACIONES EN LA NUBE CON IA:",
+                n2p_title: "Conectá a tu equipo, automatizá lo rutinario y elevá tus interacciones.",
+                n2p_sub: "Descubrí soluciones de comunicaciones empoderadas con IA confiables, intuitivas y flexibles para optimizar los flujos de trabajo, colaborar sin esfuerzo, ganar productividad y construir relaciones duraderas con los clientes.",
+                n2p_btn_cta: "Hablar con un Especialista",
+                order_btn: "Pedir Pizza"
+            },
+            en: {
+                pizzeria_tab: "Alfredo's Pizzeria",
+                vital_tab: "Vital Health Clinic",
+                hotel_tab: "Grand Horizon Hotel",
+                isp_tab: "ConnectFiber ISP",
+                pizz_badge: "Sales & Ordering",
+                pizz_sub: "The finest artisanal Latin American pizza specialties.",
+                pizz_all: "All",
+                pizz_clasicas: "Classics",
+                pizz_fusion: "Fusion",
+                pizz_rules_title: "Kitchen & Order Rules",
+                pizz_rules_text: "We offer Small and Large sizes. You can mix up to 2 flavors in a single pizza (half & half). Extra toppings can be removed, but base ingredients cannot be changed.",
+                pizz_hours: "Hours: 6:00 PM - 12:00 AM",
+                n2p_tagline: "AI CLOUD COMMUNICATIONS:",
+                n2p_title: "Connect your team, automate the routine, and elevate your interactions.",
+                n2p_sub: "Discover AI-empowered communication solutions that are reliable, intuitive, and flexible to optimize workflows, collaborate effortlessly, gain productivity, and build lasting customer relationships.",
+                n2p_btn_cta: "Talk to a Specialist",
+                order_btn: "Order Pizza"
+            },
+            pt: {
+                pizzeria_tab: "Pizzaria Alfredo",
+                vital_tab: "Clínica Vital",
+                hotel_tab: "Grand Horizon Hotel",
+                isp_tab: "ConnectFiber ISP",
+                pizz_badge: "Vendas & Pedidos",
+                pizz_sub: "As melhores especialidades artesanais da América Latina.",
+                pizz_all: "Todas",
+                pizz_clasicas: "Clássicas",
+                pizz_fusion: "Fusão",
+                pizz_rules_title: "Regras da Cozinha & Pedidos",
+                pizz_rules_text: "Oferecemos tamanhos Pequena e Grande. Você pode combinar até 2 sabores na mesma pizza (metade/metade). É permitido remover toppings, mas os ingredientes base não mudam.",
+                pizz_hours: "Horário: 18:00 - 00:00 hs",
+                n2p_tagline: "COMUNICAÇÕES EM NUVEM COM IA:",
+                n2p_title: "Conecte sua equipe, automatize o rotineiro e eleve suas interações.",
+                n2p_sub: "Descubra soluções de comunicação com IA confiáveis, intuitivas e flexíveis para otimizar fluxos de trabalho e aumentar a produtividade.",
+                n2p_btn_cta: "Falar com um Especialista",
+                order_btn: "Pedir Pizza"
+            }
+        };
+
+        let currentLang = 'es';
+
+        function renderPizzas(filter = 'all') {
+            const grid = document.getElementById('pizzaGrid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' 
+                ? pizzasData 
+                : pizzasData.filter(p => p.category === filter);
+
+            filtered.forEach(pizza => {
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4';
+                card.innerHTML = `
+                    <div class="content-card d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-light text-dark border"><i class="fa-solid fa-earth-americas me-1"></i>${pizza.country}</span>
+                                <span class="badge bg-danger">${pizza.category.toUpperCase()}</span>
+                            </div>
+                            <h5 class="fw-bold text-dark mt-2 mb-1">${pizza.name}</h5>
+                            <p class="text-muted small mb-3">${pizza.desc}</p>
+                        </div>
+                        <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="small text-muted">Chica: <strong class="text-dark">${pizza.priceC}</strong></div>
+                                <div class="small text-muted">Grande: <strong class="text-dark">${pizza.priceG}</strong></div>
+                            </div>
+                            <button class="btn btn-sm btn-danger fw-bold" onclick="alert('${pizza.name} seleccionada')">
+                                <i class="fa-solid fa-cart-plus me-1"></i><span data-i18n="order_btn">${i18n[currentLang].order_btn}</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterPizzas(cat) {
+            renderPizzas(cat);
+        }
+
+        function switchVertical(verticalId) {
+            document.querySelectorAll('.vertical-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.vertical-pill').forEach(pill => pill.classList.remove('active'));
+
+            const selectedSec = document.getElementById(verticalId);
+            if (selectedSec) selectedSec.classList.add('active');
+
+            document.body.setAttribute('data-theme', verticalId);
+
+            const brandLogo = document.getElementById('brandLogo');
+
+            if (verticalId === 'pizzeria') {
+                brandLogo.innerHTML = `<i class="fa-solid fa-pizza-slice text-warning fs-3"></i><span class="fw-bold fs-4 text-white" id="navTitle">Pizzería Alfredo</span>`;
+            } else if (verticalId === 'net2phone') {
+                brandLogo.innerHTML = `<span class="fw-extrabold fs-3 text-dark">net2phone</span>`;
+            } else if (verticalId === 'vital') {
+                brandLogo.innerHTML = `<i class="fa-solid fa-heart-pulse text-success fs-3"></i><span class="fw-bold fs-4 text-white" id="navTitle">Centro Vital</span>`;
+            } else if (verticalId === 'hotel') {
+                brandLogo.innerHTML = `<i class="fa-solid fa-hotel text-warning fs-3"></i><span class="fw-bold fs-4 text-white" id="navTitle">Grand Horizon</span>`;
+            } else if (verticalId === 'isp') {
+                brandLogo.innerHTML = `<i class="fa-solid fa-wifi text-info fs-3"></i><span class="fw-bold fs-4 text-white" id="navTitle">ConnectFiber</span>`;
+            }
+
+            event.currentTarget.classList.add('active');
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const dict = i18n[lang];
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.textContent = dict[key];
+                }
+            });
+
+            renderPizzas();
+        }
+
+        function runSpeedTest() {
+            const display = document.getElementById('speedDisplay');
+            display.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Testing...`;
+            setTimeout(() => {
+                const randomSpeed = Math.floor(Math.random() * (950 - 700 + 1)) + 700;
+                display.innerHTML = `${randomSpeed} <span class="fs-6 text-muted">Mbps</span>`;
+            }, 1200);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPizzas();
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
